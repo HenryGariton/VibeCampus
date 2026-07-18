@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>意境校园 VibeCampus — 校园 AI 创意作品展示</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+
+  <!-- ============================================================
+       SPLASH 登录引导页
+       ============================================================ -->
+  <div class="splash" id="splash">
+    <canvas class="splash__canvas" id="splashCanvas"></canvas>
+
+    <div class="splash__content">
+      <!-- Logo -->
+      <div class="splash__logo">
+        <span class="splash__logo-text">意境校园<em>VibeCampus</em></span>
+      </div>
+
+      <!-- 主标题（逐字显示） -->
+      <h1 class="splash__title" aria-label="用 AI 创造属于你的世界">
+        <span class="ch" style="--i:1" aria-hidden="true">用</span><span class="ch ch-space" style="--i:2" aria-hidden="true"></span><span class="ch" style="--i:3" aria-hidden="true">A</span><span class="ch" style="--i:4" aria-hidden="true">I</span><span class="ch ch-space" style="--i:5" aria-hidden="true"></span><span class="ch splash__title-accent" style="--i:6" aria-hidden="true">创</span><span class="ch splash__title-accent" style="--i:7" aria-hidden="true">造</span><span class="ch" style="--i:8" aria-hidden="true">属</span><span class="ch" style="--i:9" aria-hidden="true">于</span><span class="ch" style="--i:10" aria-hidden="true">你</span><span class="ch" style="--i:11" aria-hidden="true">的</span><span class="ch" style="--i:12" aria-hidden="true">世</span><span class="ch" style="--i:13" aria-hidden="true">界</span><span class="splash__caret" style="--total:13" aria-hidden="true"></span>
+      </h1>
+      <p class="splash__subtitle">
+        这里不问标准答案，只看奇思妙想——意境校园 AI 创意作品社区。
+      </p>
+
+      <!-- CTA -->
+      <div class="splash__actions">
+        <button class="splash__btn splash__btn--primary" id="btnEnter">立刻进入</button>
+      </div>
+    </div>
+  </div>
+  <!-- End of splash -->
+
+  <!-- ============================================================
+       APP 主界面（初始隐藏，登录后显示）
+       ============================================================ -->
+  <div class="app" id="app" style="display:none">
+
+    <!-- 导航栏 -->
+    <header class="nav" id="nav">
+      <div class="nav__inner">
+        <a href="#" class="nav__logo" id="navLogo">
+          <span class="nav__logo-text">意境校园<em>VibeCampus</em></span>
+        </a>
+        <div class="nav__search">
+          <svg class="nav__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="nav__search-input" placeholder="搜索作品…" id="searchInput">
+        </div>
+        <div class="nav__actions">
+          <span class="nav__link" id="btnCreateDetached" style="cursor:pointer" onclick="document.getElementById('btnCreateCTA').click()">发布作品</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 英雄区 -->
+    <section class="hero" id="hero">
+      <canvas class="hero__canvas" id="heroCanvas"></canvas>
+      <div class="hero__content">
+        <div class="hero__badge">
+          <span class="hero__badge-dot"></span>
+          意境校园 · AI 创意作品社区
+        </div>
+        <h1 class="hero__title">
+          发现<span class="hero__title-accent">好作品</span>，用灵感点燃创意
+        </h1>
+        <p class="hero__subtitle">
+          每个作品都是创作者独特的 AI 创意。浏览、打分、交流，<br>用灵感点燃下一个想法。
+        </p>
+      </div>
+    </section>
+
+    <!-- 主内容区 -->
+    <main class="main" id="mainContent">
+      <div class="main__grid">
+
+        <!-- 作品区域 -->
+        <section class="works" id="worksGrid">
+          <!-- 排序栏 -->
+          <div class="sort-bar" id="sortBar">
+            <div class="sort-bar__left">
+              <h2 class="sort-bar__title" id="worksTitle">全部作品</h2>
+              <span class="sort-bar__count" id="worksCount"></span>
+            </div>
+            <div class="sort-bar__right">
+              <span class="sort-bar__label">排序：</span>
+              <button class="sort-chip sort-chip--active" data-sort="rating">评分最高</button>
+              <button class="sort-chip" data-sort="newest">最新发布</button>
+              <button class="sort-chip" data-sort="popular">最多评分</button>
+            </div>
+          </div>
+
+          <!-- 作品网格 -->
+          <div class="works__grid" id="worksCards">
+            <!-- JS 动态渲染 -->
+          </div>
+          <div class="works__empty" id="worksEmpty" style="display:none">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <p>没有找到匹配的作品</p>
+            <span>试试调整搜索关键词</span>
+          </div>
+        </section>
+
+        <!-- 右侧：排行榜 -->
+        <aside class="leaderboard" id="leaderboard">
+          <div class="leaderboard__card">
+            <div class="leaderboard__head">
+              <h3 class="leaderboard__title">热门排行</h3>
+              <span class="leaderboard__period">本周</span>
+            </div>
+            <ol class="leaderboard__list" id="leaderboardList">
+              <!-- JS 动态渲染 -->
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- ==================== 创作引导 CTA 浮动按钮 ==================== -->
+    <button class="cta-fab" id="btnCreateCTA" title="创建属于你的 AI 创意作品">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span class="cta-fab__label">创建属于你的 AI 创意作品吧</span>
+    </button>
+
+    <!-- ==================== 发布作品模态框 ==================== -->
+    <div class="modal-overlay" id="uploadModal" style="display:none">
+      <div class="modal">
+        <div class="modal__head">
+          <h2 class="modal__title">发布你的 AI 创意作品</h2>
+          <button class="modal__close" id="btnCloseUpload">&times;</button>
+        </div>
+        <form class="modal__form" id="uploadForm">
+          <div class="form-group">
+            <label class="form-label">作品名称</label>
+            <input type="text" class="form-input" placeholder="给你的作品起个酷炫的名字" required id="uploadTitle">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">项目类型</label>
+              <select class="form-input" required id="uploadType">
+                <option value="">选择类型</option>
+                <option value="Web App">Web App</option>
+                <option value="AI/ML">AI/ML</option>
+                <option value="Game">游戏</option>
+                <option value="Tool">工具</option>
+                <option value="Data Viz">数据可视化</option>
+                <option value="Mobile">移动应用</option>
+                <option value="CLI">命令行工具</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">作品链接</label>
+            <input type="text" class="form-input" placeholder="https://你的作品链接" id="uploadLink">
+          </div>
+          <div class="form-group">
+            <label class="form-label">简介</label>
+            <textarea class="form-input form-input--textarea" placeholder="描述你的 AI 创意作品（150字以内）" maxlength="150" required id="uploadDesc"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">联系方式（选填，方便他人与你交流）</label>
+            <div class="form-row">
+              <input type="text" class="form-input" placeholder="微信" id="uploadContactWechat">
+              <input type="text" class="form-input" placeholder="QQ" id="uploadContactQQ">
+            </div>
+            <input type="email" class="form-input" placeholder="邮箱" id="uploadContactEmail" style="margin-top:0.5rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">预览图</label>
+            <div class="form-upload-zone" id="uploadPreview">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>点击选择预览图（模拟）</span>
+            </div>
+          </div>
+          <div class="modal__actions">
+            <button type="button" class="btn btn--ghost" id="btnCancelUpload">取消</button>
+            <button type="submit" class="btn btn--primary">发布作品</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== 作品详情 · 底部抽屉 ==================== -->
+    <div class="sheet-overlay" id="ratingModal" style="display:none">
+      <div class="sheet" id="ratingSheet">
+        <button class="sheet__close" id="btnCloseRating" aria-label="关闭">&times;</button>
+
+        <div class="sheet__scroll">
+          <div class="sheet__header">
+            <h2 class="sheet__title" id="ratingModalTitle">作品名</h2>
+            <span class="sheet__badge">AI 创意作品</span>
+          </div>
+          <p class="sheet__desc" id="ratingModalDesc"></p>
+
+          <div class="sheet__rating">
+            <div class="rating-current__stars" id="sheetStars"></div>
+            <div class="rating-current__info" id="sheetRatingInfo"></div>
+          </div>
+
+          <!-- 作者信息 -->
+          <div class="sheet__author">
+            <div class="sheet__author-avatar" id="authorAvatar">张</div>
+            <div class="sheet__author-main">
+              <div class="sheet__author-head">
+                <span class="sheet__author-name" id="authorName">张三</span>
+                <span class="sheet__author-role" id="authorRole">学生</span>
+              </div>
+              <div class="sheet__author-major" id="authorMajor"></div>
+              <p class="sheet__author-bio" id="authorBio"></p>
+              <div class="sheet__author-contact" id="authorContact"></div>
+            </div>
+            <button class="sheet__author-btn" id="btnContactAuthor" type="button" onclick="contactAuthorPrimary()">联系作者</button>
+          </div>
+
+          <div class="sheet__reviews-head">
+            <h3>其他人的评价</h3>
+            <span id="commentsCount">0 条评价</span>
+          </div>
+          <div class="comments__list" id="commentsList"></div>
+        </div>
+
+        <div class="sheet__footer">
+          <div class="sheet__rate">
+            <span class="sheet__rate-label">打分</span>
+            <div class="rating-interactive__stars" id="interactiveStars">
+              <svg class="rating-interactive__star" data-star="1" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="rating-interactive__star" data-star="2" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="rating-interactive__star" data-star="3" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="rating-interactive__star" data-star="4" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="rating-interactive__star" data-star="5" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="rating-interactive__label" id="ratingLabel">点击星星评分</span>
+          </div>
+
+          <div class="sheet__comment-form">
+            <input class="sheet__nick" id="commentNick" placeholder="输入昵称（选填）" maxlength="20">
+            <div class="sheet__comment-row">
+              <textarea class="comments__input" id="commentInput" placeholder="写下你的评价…" rows="1"></textarea>
+              <button class="btn btn--primary" id="btnSubmitComment">发布</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <!-- Supabase SDK（浏览器直连数据库，无需 Express 后端） -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
