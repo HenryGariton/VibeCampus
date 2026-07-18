@@ -1,0 +1,9 @@
+{
+  "name": "vibecampus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VibeCampus (意境校园) — 校园 AI 创意作品社区，纯静态前端 + Supabase 直连",
+  "scripts": {
+    "build": "echo '纯静态站点，无需构建' && exit 0"
+  }
+}
